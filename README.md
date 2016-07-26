@@ -9,7 +9,7 @@
 
 - css 样式文件
 - img 图片文件
-- slice 雪碧图
+- slice 雪碧图，工作流会在sass目录中生成_slice.scss，然后直接用**@extend %雪碧图名称**来引用，build之后就会自动生成雪碧图
 - js js文件
 - sass 项目使用sass开发
     - common 公用样式
@@ -17,6 +17,7 @@
     - module 样式库
         - ani.scss 动画库
     - index.scss 主样式文件
+- tpl ejs模板，编辑html直接在这里编辑，由工作流输出html
 - index.html
 
 ## 框架相关注意点
