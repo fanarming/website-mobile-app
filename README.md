@@ -22,7 +22,7 @@
 
 ## 框架相关注意点
 
-1. reset.scss中默认字体设置成设计稿宽度除以10，比如设计稿是750px，那么默认字体则设置成75px，如下
+1.  reset.scss中默认字体设置成设计稿宽度除以10，比如设计稿是750px，那么默认字体则设置成75px，如下
 ```
 $browser-default-font-size: 75px !default;
 ```
@@ -39,7 +39,6 @@ $browser-default-font-size: 75px !default;
     @include font-dpr(24px);
 }
 ```
-
 4. 增加微信分享功能，底部可以填充分享文案
 ```
     window.weixinConfig = {
