@@ -15,6 +15,155 @@
     <link href="css/index.css" rel="stylesheet">
 </head>
 <body>
+<script src="http://assets.dwstatic.com/common/lib/zepto/1.1.6/zepto.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    window.weixinConfig = {
+        "title": "分享标题",
+        "desc": "分享文案",
+        "imgUrl": "img/mobile/share.jpg",
+        "link": encodeURI(window.location.href.split("#")[0]),
+        "type": "link",
+        "dataUrl": null
+    };
+</script>
+<script>
+    /**
+     * 获取微信的ticket
+     * @param opts {json} {"appId": appId, "noncestr": nonceStr, "timestamp": timestamp, "url": purl }
+     * @param callback(sign) {string} shal加密后的微信ticket，有效期为7200s
+     */
+    var getWxTicket = function(opts, callback) {
+        var self = this;
 
+        $.ajax({
+            'url': 'http://api.activityboard.game.yy.com/weixin/api/getSign?callback=?',
+            'data': opts,
+            dataType:'jsonp',
+            'success': function(data) {
+                if (data.data && data.data.sign) {
+                    callback && callback(data.data.sign);
+
+                } else {
+                    callback && callback(null);
+
+                }
+
+            }
+
+        });
+    };
+    /**
+     * 获取微信的Sign
+     * @param opts {json} {"appId": appId, "noncestr": nonceStr, "timestamp": timestamp, "url": purl }
+     * @param callback(sign) {string} shal加密后的微信ticket，有效期为7200s
+     */
+    var getWxSign  = function(purl,cb){
+        var self = this;
+        var result = {}
+        $.ajax({
+            'url': 'http://v5.yy.com/p/wechat/jssdk-signature',
+            'data':{'url':purl},
+            'type':'Post',
+            'success': function(data) {
+                if(data.data){
+                    cb(data.data)
+                }else{
+                    cb()
+                }
+
+            }
+
+        });
+    };
+    /**
+     * 微信分享初始化
+     * @param opts {json} {'appId': '123', 'debug' : true, 'title': '分享的标题', 'desc': '分享的描述', 'link': '分享的链接', 'imgUrl': '分享的小图标url', 'type': '分享类型,music、video或link，不填默认为link', 'dataUrl': '如果type是music或video，则要提供数据链接，默认为空', 'success': '分享成功的回调', 'cancel': '分享取消的回调'}
+     */
+    var wXInit = function(optsdata, callback) {
+        var self = this;
+        var timestamp = parseInt(new Date().getTime() / 1000), //分享时间参数，10位，精确到秒
+                appId = 'wx24e9851cdd6b024d', //公众号AppId
+                purl = encodeURI(window.location.href.split('#')[0]), //正式上线地址
+                nonceStr = randomString(20); //随机字符串
+
+        //生成随机字符串
+        function randomString(len) {
+            len = len || 32;
+            var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+            var maxPos = chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        }
+
+        var opts = {
+            "appId": appId,
+            "noncestr": nonceStr,
+            "timestamp": timestamp,
+            "url": purl
+        };
+        getWxSign(purl,function(config){
+            wxShareFn(config)
+        })
+        // getWxTicket(opts, function(sign) {
+        //
+        //     if (sign) {
+        //         wxShareFn(sign);
+        //     }
+        //
+        // });
+
+        //注入微信配置
+        function wxShareFn(config) {
+            wx.config({
+                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: config.appId, // 必填，公众号的唯一标识
+                timestamp: config.timestamp, // 必填，生成签名的时间戳
+                nonceStr: config.nonceStr, // 必填，生成签名的随机串
+                signature: config.signature, // 必填，签名，见附录1
+                jsApiList: [
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo'
+                ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            });
+
+            wx.ready(function() {
+
+                var shareData = {
+                    title: optsdata.title, // 分享标题
+                    desc: optsdata.desc, // 分享描述
+                    link: optsdata.link || window.location.href, // 分享链接
+                    imgUrl: optsdata.imgUrl, // 分享图标
+                    type: optsdata.type || '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: optsdata.dataUrl || '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function() {
+                        optsdata.success && opts.success();
+                        //  $('#share-1').click();
+                    },
+                    cancel: function() {
+                        optsdata.cancel && optsdata.cancel();
+                        // 用户取消分享后执行的回调函数
+                    }
+                };
+                wx.onMenuShareTimeline(shareData); //分享到朋友圈
+                wx.onMenuShareAppMessage(shareData); //分享到朋友
+                wx.onMenuShareQQ(shareData);
+                wx.onMenuShareWeibo(shareData);
+            })
+        }
+
+    };
+    //微信分享
+    if(window.weixinConfig){
+        wXInit(weixinConfig);
+    }
+
+</script>
 </body>
 </html>

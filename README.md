@@ -38,3 +38,21 @@ $browser-default-font-size: 75px !default;
     @include font-dpr(24px);
 }
 ```
+
+4. 增加微信分享功能，底部可以填充分享文案
+```
+    window.weixinConfig = {
+        "title": "分享标题",
+        "desc": "分享文案",
+        "imgUrl": "img/mobile/share.jpg",
+        "link": encodeURI(window.location.href.split("#")[0]),
+        "type": "link",
+        "dataUrl": null
+    };
+```
+请记住微信分享一般分为朋友圈和好友分享两种，好友分享有**分享标题和分享文案**，而朋友圈分享一般只取**分享文案**
+
+
+## 代码更新日志
+
+1. 2016.7.26 - 修改工作流，由grunt变为gulp；增加微信分享功能
