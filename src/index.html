@@ -151,7 +151,23 @@
                         // 用户取消分享后执行的回调函数
                     }
                 };
-                wx.onMenuShareTimeline(shareData); //分享到朋友圈
+                var shareData2 = {
+                    title: optsdata.desc, // 分享标题
+                    desc: optsdata.desc, // 分享描述
+                    link: optsdata.link || window.location.href, // 分享链接
+                    imgUrl: optsdata.imgUrl, // 分享图标
+                    type: optsdata.type || '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: optsdata.dataUrl || '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function() {
+                        optsdata.success && opts.success();
+                        //  $('#share-1').click();
+                    },
+                    cancel: function() {
+                        optsdata.cancel && optsdata.cancel();
+                        // 用户取消分享后执行的回调函数
+                    }
+                };
+                wx.onMenuShareTimeline(shareData2); //分享到朋友圈
                 wx.onMenuShareAppMessage(shareData); //分享到朋友
                 wx.onMenuShareQQ(shareData);
                 wx.onMenuShareWeibo(shareData);

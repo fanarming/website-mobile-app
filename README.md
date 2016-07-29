@@ -56,3 +56,4 @@ $browser-default-font-size: 75px !default;
 ## 代码更新日志
 
 1. 2016.7.26 - 修改工作流，由grunt变为gulp；增加微信分享功能
+2. 修改朋友圈分享文案
