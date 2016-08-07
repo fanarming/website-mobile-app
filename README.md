@@ -6,7 +6,8 @@
 此为移动端基础开发框架，总体使用rem布局，原理可以参照这篇文章：<a href="https://github.com/amfe/lib-flexible">使用Flexible实现手淘H5页面的终端适配</a>，建议在用这个框架前学习这篇文章的知识，明白这个框架的原理
 
 > 框架js
-```js
+
+```
 ;(function(win, lib) {
     var doc = win.document;
     var docEl = doc.documentElement;
