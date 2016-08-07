@@ -56,4 +56,5 @@ $browser-default-font-size: 75px !default;
 ## 代码更新日志
 
 1. 2016.7.26 - 修改工作流，由grunt变为gulp；增加微信分享功能
-2. 修改朋友圈分享文案
+2. 2016.7.29 - 修改朋友圈分享文案
+3. 2016.8.7 - 增加viewport，因为在某些app下，所用的webview没有识别到viewport，导致出错，因为手淘的框架是直接用js计算viewport的，所以就出错了
